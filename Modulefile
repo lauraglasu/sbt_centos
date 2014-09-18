@@ -9,5 +9,4 @@ project_page 'https://github.com/lauraglasu/sbt_centos.git'
 
 ## Add dependencies, if any:
 dependency 'maestrodev/wget', '>= 1.3.2'
-dependency 'leonardothibes/puppet-openjdk', '>= 1.0.0'
 
