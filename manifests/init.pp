@@ -5,7 +5,16 @@ class sbt_centos ($source_url = "https://dl.bintray.com/sbt/rpm",
  
   $sbt_filename = "sbt-0.${sbt_major_version}.${sbt_minor_version}.rpm"
 
-  # Download sbt from location of choice
+ # Install java openJDK
+  exec { "java":
+    command     => "/usr/bin/yum -y install java",
+  }   
+  
+  exec { "java-devel":
+    command     => "/usr/bin/yum -y install java-devel",
+  }   
+ 
+ # Download sbt from location of choice
   include wget
   
   wget::fetch { 'sbt':
@@ -14,13 +23,15 @@ class sbt_centos ($source_url = "https://dl.bintray.com/sbt/rpm",
     timeout     => 0,
     verbose     => false,
   }
-
+  ->
   # Install sbt
   package {'sbt':
     provider => rpm,
     ensure   => "0.${sbt_major_version}.${sbt_minor_version}",
     source   => "/usr/local/$sbt_filename",
-    require  => Wget::Fetch['sbt'],
+    require  => [ Exec['java'],
+			Exec['java-devel']
+			]
   }
 
   notify { "Major Version: $sbt_major_version, Minor Version: $sbt_minor_version": }
